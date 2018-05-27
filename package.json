@@ -16,11 +16,12 @@
     "url": "https://github.com/udacity/mws-restaurant-stage-1/issues"
   },
   "homepage": "https://github.com/udacity/mws-restaurant-stage-1#README.md",
-  "dependencies": {
-  },
+  "dependencies": {},
   "devDependencies": {
+    "css-loader": "^0.28.11",
     "google-maps": "^3.3.0",
     "html-webpack-plugin": "^3.2.0",
+    "style-loader": "^0.21.0",
     "webpack": "^4.8.3",
     "webpack-cli": "^2.1.4",
     "webpack-dev-server": "^3.1.4"

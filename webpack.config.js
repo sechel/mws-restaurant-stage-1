@@ -12,6 +12,17 @@ module.exports = {
         path: DIST_DIR,
         filename: 'js/[name].[hash].js'
     },
+    module: {
+        rules: [
+            { 
+                test: /\.css$/,
+                use: [
+                    { loader: 'style-loader' },
+                    { loader: 'css-loader' }
+                ]
+            }
+        ]
+    },
     devServer: {
         contentBase: '.',
         compress: true,
