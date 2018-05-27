@@ -1,4 +1,5 @@
 const HtmlWebpackPlugin = require('html-webpack-plugin')
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 const DIST_DIR = __dirname + '/dist';
 
@@ -26,20 +27,40 @@ module.exports = {
     devServer: {
         contentBase: '.',
         compress: true,
-        port: 8000
+        port: 8000,
+        headers: {
+            'Access-Control-Allow-Origin': '*'
+        }
     },
     optimization: {
+        splitChunks: {
+            chunks: 'all',
+            minSize: 300,
+            minChunks: 1,
+            maxAsyncRequests: 5,
+            maxInitialRequests: 3,
+            automaticNameDelimiter: '~',
+            name: true,
+            cacheGroups: {
+                vendors: {
+                    test: /[\\/]node_modules[\\/]/,
+                    name: 'vendors',
+                    chunks: 'all'
+                }
+            }
+        }
     },
     plugins: [
         new HtmlWebpackPlugin({
             template: './html/index.html',
             filename: 'index.html',
-            chunks: ['index']
+            excludeChunks: ['restaurant']
         }),
         new HtmlWebpackPlugin({
             template: './html/restaurant.html',
             filename: 'restaurant.html',
-            chunks: ['restaurant']
-        })
+            excludeChunks: ['index']
+        }),
+        new CopyWebpackPlugin(['data/**/*', 'img/**/*'])
     ]
 };
