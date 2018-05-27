@@ -1,10 +1,34 @@
-var path = require('path');
+const HtmlWebpackPlugin = require('html-webpack-plugin')
+
+const DIST_DIR = __dirname + '/dist';
 
 module.exports = {
-  mode: 'development',
-  entry: './js/main.js',
-  output: {
-    path: path.resolve(__dirname, 'dist'),
-    filename: 'js/[hash].js'
-  }
+    mode: 'development',
+    entry: {
+        index: './js/main.js',
+        restaurant: './js/restaurant.js'
+    },
+    output: {
+        path: DIST_DIR,
+        filename: 'js/[name].[hash].js'
+    },
+    devServer: {
+        contentBase: '.',
+        compress: true,
+        port: 8000
+    },
+    optimization: {
+    },
+    plugins: [
+        new HtmlWebpackPlugin({
+            template: './html/index.html',
+            filename: 'index.html',
+            chunks: ['index']
+        }),
+        new HtmlWebpackPlugin({
+            template: './html/restaurant.html',
+            filename: 'restaurant.html',
+            chunks: ['restaurant']
+        })
+    ]
 };

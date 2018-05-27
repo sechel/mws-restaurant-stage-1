@@ -1,7 +1,9 @@
+import GoogleMapsLoader from 'google-maps';
+
 /**
  * Common database helper functions.
  */
-class DBHelper {
+export class DBHelper {
 
   /**
    * Database URL.
