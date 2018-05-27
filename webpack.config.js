@@ -1,5 +1,6 @@
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const CopyWebpackPlugin = require('copy-webpack-plugin');
+const { GenerateSW } = require('workbox-webpack-plugin');
 
 const DIST_DIR = __dirname + '/dist';
 
@@ -61,6 +62,36 @@ module.exports = {
             filename: 'restaurant.html',
             excludeChunks: ['index']
         }),
-        new CopyWebpackPlugin(['data/**/*', 'img/**/*'])
+        new CopyWebpackPlugin(['data/**/*', 'img/**/*']),
+        new GenerateSW({
+            ignoreUrlParametersMatching: [/./],
+            exclude: [
+                new RegExp('^data\/'),
+                new RegExp('^img\/')
+            ],
+            runtimeCaching: [
+                {
+                    urlPattern: new RegExp('^http://localhost:8000/data/'),
+                    handler: 'staleWhileRevalidate',
+                    options: {
+                        cacheName: 'data-cache'
+                    }
+                },
+                {
+                    urlPattern: new RegExp('^http://127.0.0.1:8000/img/'),
+                    handler: 'cacheFirst',
+                    options: {
+                        cacheName: 'image-cache'
+                    }
+                },         
+                {
+                    urlPattern: new RegExp('^https://maps.googleapis.com/|^https://maps.gstatic.com/'),
+                    handler: 'networkFirst',
+                    options: {
+                        cacheName: 'google-maps-cache'
+                    }
+                }                       
+            ]
+        })
     ]
 };

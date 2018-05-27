@@ -8,6 +8,13 @@ let _cuisines = [];
 let _map;
 let _markers = [];
 
+if ('serviceWorker' in navigator) {
+  // Use the window load event to keep the page load performant
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/service-worker.js');
+  });
+}
+
 GoogleMapsLoader.KEY = 'AIzaSyA4PPJmgs2SFr05ux53ByeTl3fM0Zcp8z0';
 GoogleMapsLoader.LIBRARIES = ['places'];
 GoogleMapsLoader.load(google => {
