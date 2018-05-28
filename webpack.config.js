@@ -36,7 +36,7 @@ module.exports = {
     optimization: {
         splitChunks: {
             chunks: 'all',
-            minSize: 300,
+            minSize: 3000,
             minChunks: 1,
             maxAsyncRequests: 5,
             maxInitialRequests: 3,
@@ -64,6 +64,7 @@ module.exports = {
         }),
         new CopyWebpackPlugin(['data/**/*', 'img/**/*']),
         new GenerateSW({
+            skipWaiting: true,
             ignoreUrlParametersMatching: [/./],
             exclude: [
                 new RegExp('^data\/'),
