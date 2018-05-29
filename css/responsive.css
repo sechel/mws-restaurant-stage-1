@@ -23,10 +23,25 @@
 
 /* Large devices (desktops, 992px and up) */
 @media (min-width: 992px) {
-
+    #maincontent {
+        flex-direction: row-reverse;
+    }
+    #map {
+        height: calc(100vh - 40px);
+        width: 40vw;
+    }
+    #restaurants-list {
+        overflow-y: auto;
+        height: calc(100vh - 40px - 81px);  
+    }
+    #restaurants-list li {
+        max-width: calc(60vw / 2 - 80px);
+    }
 }
 
 /* Extra large devices (large desktops, 1200px and up) */
 @media (min-width: 1200px) {
-
+    #restaurants-list li {
+        max-width: calc(60vw / 3 - 80px);
+    }
 }

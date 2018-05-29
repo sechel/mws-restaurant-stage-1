@@ -10,7 +10,7 @@ body,td,th,p{
 body {
 	background-color: #fdfdfd;
 	margin: 0;
-	position:relative;
+  position: relative;
 }
 ul, li {
 	font-family: Arial, Helvetica, sans-serif;
@@ -38,6 +38,8 @@ article, aside, canvas, details, figcaption, figure, footer, header, hgroup, men
 #maincontent {
   background-color: #f3f3f3;
   min-height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 #footer {
   background-color: #444;
@@ -225,8 +227,6 @@ nav h1 a {
   border-top: 1px solid #fff;
   width: 100%;
 }
-#reviews-container {
-}
 #reviews-container h2 {
   color: #f58500;
   font-size: 24pt;
@@ -244,6 +244,4 @@ nav h1 a {
 }
 #reviews-list li p {
   margin: 0 0 10px;
-}
-#restaurant-hours td {
 }
