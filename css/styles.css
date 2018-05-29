@@ -1,5 +1,4 @@
 @charset "utf-8";
-@import "./responsive.css";
 /* CSS Document */
 
 body,td,th,p{
@@ -52,7 +51,7 @@ article, aside, canvas, details, figcaption, figure, footer, header, hgroup, men
 /* ====================== Navigation ====================== */
 nav {
   width: 100%;
-  height: 80px;
+  height: 30px;
   background-color: #252831;
   text-align:center;
 }
@@ -61,9 +60,9 @@ nav h1 {
 }
 nav h1 a {
   color: #fff;
-  font-size: 14pt;
+  font-size: 12pt;
   font-weight: 200;
-  letter-spacing: 10px;
+  letter-spacing: 5px;
   text-transform: uppercase;
 }
 #breadcrumb {
@@ -105,17 +104,16 @@ nav h1 a {
 }
 /* ====================== Restaurant Filtering ====================== */
 .filter-options {
-  width: 100%;
-  padding: 1em 0em 1em 1em;
+  padding: 10px 0px;
   background-color: #3397DB;
-  align-items: center;
+  text-align: center;
 }
 .filter-options h2 {
   color: white;
   font-size: 1rem;
   font-weight: normal;
   line-height: 1;
-  margin: 0 20px;
+  margin: 0;
 }
 .filter-options select {
   background-color: white;
@@ -135,13 +133,19 @@ nav h1 a {
   list-style: outside none none;
   text-align: center;
   padding: 0;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  text-align: center;
+  width: 100%;
 }
 #restaurants-list li {
   background-color: #fff;
   font-family: Arial,sans-serif;
-  margin: 0px 0px 15px 0px;
+  margin: 0px auto 15px auto;
   padding: 25px;
   text-align: left;
+  max-width: 380px;
 }
 #restaurants-list .restaurant-img {
   background-color: #ccc;
@@ -201,7 +205,7 @@ nav h1 a {
   line-height: 1.1;
 }
 #restaurant-img {
-	width: 100%;
+  width: 100%;
 }
 #restaurant-address {
   font-size: 12pt;

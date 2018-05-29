@@ -1,6 +1,6 @@
 import { DBHelper } from './dbhelper';
 import GoogleMapsLoader from 'google-maps';
-import Styles from '../css/styles.css';
+import Styles from '../css/responsive.css';
 
 let _restaurants = [];
 let _neighborhoods = [];
