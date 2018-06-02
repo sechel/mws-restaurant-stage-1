@@ -15,7 +15,7 @@ if ('serviceWorker' in navigator) {
   });
 }
 
-GoogleMapsLoader.KEY = 'AIzaSyA4PPJmgs2SFr05ux53ByeTl3fM0Zcp8z0';
+GoogleMapsLoader.KEY = WEBPACK_GDRIVE_API_KEY;
 GoogleMapsLoader.LIBRARIES = ['places'];
 GoogleMapsLoader.load(google => {
   let loc = {

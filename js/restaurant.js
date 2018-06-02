@@ -12,7 +12,7 @@ if ('serviceWorker' in navigator) {
   });
 }
 
-GoogleMapsLoader.KEY = 'AIzaSyA4PPJmgs2SFr05ux53ByeTl3fM0Zcp8z0';
+GoogleMapsLoader.KEY = WEBPACK_GDRIVE_API_KEY;
 GoogleMapsLoader.LIBRARIES = ['places'];
 
 /**
@@ -110,10 +110,6 @@ const fillRestaurantHoursHTML = () => {
 const fillReviewsHTML = () => {
   const reviews = _restaurant.reviews
   const container = document.getElementById('reviews-container');
-  const title = document.createElement('h2');
-  title.innerHTML = 'Reviews';
-  container.appendChild(title);
-
   if (!reviews) {
     const noReviews = document.createElement('p');
     noReviews.innerHTML = 'No reviews yet!';

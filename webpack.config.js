@@ -1,7 +1,9 @@
+const DefinePlugin = require('webpack').DefinePlugin;
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const { GenerateSW } = require('workbox-webpack-plugin');
 
+const GDRIVE_API_KEY = 'AIzaSyA4PPJmgs2SFr05ux53ByeTl3fM0Zcp8z0';
 const DIST_DIR = __dirname + '/dist';
 
 module.exports = {
@@ -25,13 +27,14 @@ module.exports = {
             }
         ]
     },
+    devtool: 'source-map',
     devServer: {
+        host: '127.0.0.1',
+        port: 8000,
         contentBase: '.',
         compress: true,
-        port: 8000,
-        headers: {
-            'Access-Control-Allow-Origin': '*'
-        }
+        headers: { 'Access-Control-Allow-Origin': '*' },
+        open: true
     },
     optimization: {
         splitChunks: {
@@ -52,6 +55,9 @@ module.exports = {
         }
     },
     plugins: [
+        new DefinePlugin({
+            WEBPACK_GDRIVE_API_KEY: JSON.stringify(GDRIVE_API_KEY)
+        }),
         new HtmlWebpackPlugin({
             template: './html/index.html',
             filename: 'index.html',
