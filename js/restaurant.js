@@ -1,4 +1,5 @@
 import { DBHelper } from './dbhelper';
+import { Utility } from './utility';
 import GoogleMapsLoader from 'google-maps';
 import Styles from '../css/responsive.css';
 
@@ -71,7 +72,10 @@ const fillRestaurantHTML = () => {
 
   const image = document.getElementById('restaurant-img');
   image.className = 'restaurant-img'
-  image.src = DBHelper.imageUrlForRestaurant(_restaurant);
+  const src = DBHelper.imageUrlForRestaurant(_restaurant);
+  image.src = src;
+  image.srcset = Utility.generateSrcSet(src);
+  image.sizes = WEBPACK_RESPONSIVE_BOUNDARIES;  
 
   const cuisine = document.getElementById('restaurant-cuisine');
   cuisine.innerHTML = _restaurant.cuisine_type;

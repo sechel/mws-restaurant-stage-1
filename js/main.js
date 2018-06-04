@@ -1,6 +1,12 @@
 import { DBHelper } from './dbhelper';
+import { Utility } from './utility';
 import GoogleMapsLoader from 'google-maps';
 import Styles from '../css/responsive.css';
+
+function requireAll(requireContext) {
+  return requireContext.keys().forEach(requireContext);
+}
+requireAll(require.context('../img'));
 
 let _restaurants = [];
 let _neighborhoods = [];
@@ -151,7 +157,10 @@ const createRestaurantHTML = (restaurant) => {
 
   const image = document.createElement('img');
   image.className = 'restaurant-img';
-  image.src = DBHelper.imageUrlForRestaurant(restaurant);
+  const src = DBHelper.imageUrlForRestaurant(restaurant);
+  image.src = src;
+  image.srcset = Utility.generateSrcSet(src);
+  image.sizes = WEBPACK_RESPONSIVE_BOUNDARIES;
   li.append(image);
 
   const name = document.createElement('h1');
