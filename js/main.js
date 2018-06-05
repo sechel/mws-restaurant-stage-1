@@ -161,6 +161,7 @@ const createRestaurantHTML = (restaurant) => {
   image.src = src;
   image.srcset = Utility.generateSrcSet(src);
   image.sizes = WEBPACK_RESPONSIVE_BOUNDARIES;
+  image.alt = 'Image of restaurant ' + restaurant.name;
   li.append(image);
 
   const name = document.createElement('h1');

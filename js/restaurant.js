@@ -75,7 +75,8 @@ const fillRestaurantHTML = () => {
   const src = DBHelper.imageUrlForRestaurant(_restaurant);
   image.src = src;
   image.srcset = Utility.generateSrcSet(src);
-  image.sizes = WEBPACK_RESPONSIVE_BOUNDARIES;  
+  image.sizes = WEBPACK_RESPONSIVE_BOUNDARIES;
+  image.alt = 'Image of restaurant ' + _restaurant.name;
 
   const cuisine = document.getElementById('restaurant-cuisine');
   cuisine.innerHTML = _restaurant.cuisine_type;
