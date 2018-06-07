@@ -2,6 +2,7 @@ const DefinePlugin = require('webpack').DefinePlugin;
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const { GenerateSW } = require('workbox-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 const RESPONSIVE_SIZES = [250, 320, 400, 500, 640, 800];
 const GDRIVE_API_KEY = 'AIzaSyA4PPJmgs2SFr05ux53ByeTl3fM0Zcp8z0';
@@ -30,7 +31,7 @@ module.exports = {
             { 
                 test: /\.css$/,
                 use: [
-                    { loader: 'style-loader' },
+                    MiniCssExtractPlugin.loader,
                     { loader: 'css-loader' }
                 ]
             },
@@ -77,6 +78,10 @@ module.exports = {
         }
     },
     plugins: [
+        new MiniCssExtractPlugin({
+            filename: "[name].[hash].css",
+            chunkFilename: "[id].[hash].css"
+        }),
         new DefinePlugin({
             WEBPACK_GDRIVE_API_KEY: JSON.stringify(GDRIVE_API_KEY),
             WEBPACK_RESPONSIVE_SIZES: JSON.stringify(RESPONSIVE_SIZES)
