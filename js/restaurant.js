@@ -2,6 +2,7 @@ import { DBHelper } from './dbhelper';
 import { Utility } from './utility';
 import GoogleMapsLoader from 'google-maps';
 import Styles from '../css/responsive.css';
+import 'lazysizes';
 
 let _restaurant;
 let _map;
@@ -15,25 +16,6 @@ if ('serviceWorker' in navigator) {
 
 GoogleMapsLoader.KEY = WEBPACK_GDRIVE_API_KEY;
 GoogleMapsLoader.LIBRARIES = ['places'];
-
-/**
- * Initialize Google map, called from HTML.
- */
-GoogleMapsLoader.load(google => {
-  fetchRestaurantFromURL((error, restaurant) => {
-    if (error) { // Got an error!
-      console.error(error);
-    } else {
-      _map = new google.maps.Map(document.getElementById('map'), {
-        zoom: 16,
-        center: restaurant.latlng,
-        scrollwheel: false
-      });
-      fillBreadcrumb();
-      DBHelper.mapMarkerForRestaurant(restaurant, _map);
-    }
-  });
-});
 
 /**
  * Get current restaurant from page URL.
@@ -71,11 +53,12 @@ const fillRestaurantHTML = () => {
   address.innerHTML = _restaurant.address;
 
   const image = document.getElementById('restaurant-img');
-  image.className = 'restaurant-img'
+  image.className = 'restaurant-img lazyload'
   const src = DBHelper.imageUrlForRestaurant(_restaurant);
-  image.src = src;
-  image.srcset = Utility.generateSrcSet(src);
-  image.sizes = WEBPACK_RESPONSIVE_BOUNDARIES;
+  image.src = Utility.generateLowResSrc(src);
+  image.setAttribute('data-src', image.src);
+  image.setAttribute('data-srcset', Utility.generateSrcSet(src));
+  image.setAttribute('data-sizes', 'auto');
   image.alt = 'Image of restaurant ' + _restaurant.name;
 
   const cuisine = document.getElementById('restaurant-cuisine');
@@ -174,3 +157,22 @@ const getParameterByName = (name, url) => {
   if (!results[2]) { return ''; }
   return decodeURIComponent(results[2].replace(/\+/g, ' '));
 }
+
+/**
+ * Initialize Google map, called from HTML.
+ */
+fetchRestaurantFromURL((error, restaurant) => {
+  if (error) { // Got an error!
+    console.error(error);
+    return;
+  }
+  fillBreadcrumb();
+  GoogleMapsLoader.load(google => {
+    _map = new google.maps.Map(document.getElementById('map'), {
+      zoom: 16,
+      center: restaurant.latlng,
+      scrollwheel: false
+    });
+    DBHelper.mapMarkerForRestaurant(restaurant, _map);
+  });
+});
