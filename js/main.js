@@ -3,6 +3,7 @@ import { Utility } from './utility';
 import GoogleMapsLoader from 'google-maps';
 import Styles from '../css/responsive.css';
 
+import 'lazysizes';
 function requireAll(requireContext) {
   return requireContext.keys().forEach(requireContext);
 }
@@ -162,11 +163,12 @@ const createRestaurantHTML = (restaurant) => {
   const li = document.createElement('li');
 
   const image = document.createElement('img');
-  image.className = 'restaurant-img';
+  image.className = 'restaurant-img lazyload';
   const src = DBHelper.imageUrlForRestaurant(restaurant);
-  image.src = src;
-  image.srcset = Utility.generateSrcSet(src);
-  image.sizes = WEBPACK_RESPONSIVE_BOUNDARIES;
+  image.src = Utility.generateLowResSrc(src);
+  image.setAttribute('data-src', image.src);
+  image.setAttribute('data-srcset', Utility.generateSrcSet(src));
+  image.setAttribute('data-sizes', 'auto');
   image.alt = 'Image of restaurant ' + restaurant.name;
   li.append(image);
 

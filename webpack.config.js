@@ -3,8 +3,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin')
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const { GenerateSW } = require('workbox-webpack-plugin');
 
-const RESPONSIVE_SIZES = [250, 320, 500, 640, 800];
-const RESPONSIVE_BOUNDARIES = '(max-width: 320px) 250px, (min-width: 321px) and (max-width: 400px) 320px, (min-width: 401px) and (max-width: 575px) 500px, (min-width: 576px) and (max-width: 767px) 320px, (min-width: 768px) and (max-width: 919px) 250px, 320px';
+const RESPONSIVE_SIZES = [250, 320, 400, 500, 640, 800];
 const GDRIVE_API_KEY = 'AIzaSyA4PPJmgs2SFr05ux53ByeTl3fM0Zcp8z0';
 const DIST_DIR = __dirname + '/dist';
 
@@ -80,8 +79,7 @@ module.exports = {
     plugins: [
         new DefinePlugin({
             WEBPACK_GDRIVE_API_KEY: JSON.stringify(GDRIVE_API_KEY),
-            WEBPACK_RESPONSIVE_SIZES: JSON.stringify(RESPONSIVE_SIZES),
-            WEBPACK_RESPONSIVE_BOUNDARIES: JSON.stringify(RESPONSIVE_BOUNDARIES)
+            WEBPACK_RESPONSIVE_SIZES: JSON.stringify(RESPONSIVE_SIZES)
         }),
         new HtmlWebpackPlugin({
             template: './html/index.html',
