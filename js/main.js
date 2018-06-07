@@ -28,10 +28,16 @@ GoogleMapsLoader.load(google => {
     lat: 40.722216,
     lng: -73.987501
   };
-  _map = new google.maps.Map(document.getElementById('map'), {
+  const mapElement = document.getElementById('map');
+  _map = new google.maps.Map(mapElement, {
     zoom: 12,
     center: loc,
     scrollwheel: false
+  });
+  const listener = _map.addListener('tilesloaded', () => {
+    const allLinks = mapElement.querySelectorAll('a button');
+    allLinks.forEach(a => a.tabIndex = 999);
+    google.maps.event.removeListener(listener)
   });
   updateRestaurants();
 });
