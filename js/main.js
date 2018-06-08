@@ -35,11 +35,7 @@ GoogleMapsLoader.load(google => {
     center: loc,
     scrollwheel: false
   });
-  const listener = _map.addListener('tilesloaded', () => {
-    const allLinks = mapElement.querySelectorAll('a button');
-    allLinks.forEach(a => a.tabIndex = 999);
-    google.maps.event.removeListener(listener)
-  });
+  Utility.removeFromTabOrder(_map, mapElement);
   updateRestaurants();
 });
 

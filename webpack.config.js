@@ -50,7 +50,7 @@ module.exports = {
             }
         ]
     },
-    devtool: 'source-map',
+    devtool: 'cheap-module-eval-source-map',
     devServer: {
         host: '127.0.0.1',
         port: 8000,

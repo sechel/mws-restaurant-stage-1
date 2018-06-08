@@ -23,4 +23,15 @@ export class Utility {
         return RESPONSIVE_SIZES.map(size => `(max-width: ${size}px) ${size}px`)
     }
 
+    static removeFromTabOrder(map, mapElement) {
+        const listener = map.addListener('tilesloaded', () => {
+            const setTabIndex = a => a.tabIndex = -1;
+            mapElement.querySelectorAll('a').forEach(setTabIndex);
+            mapElement.querySelectorAll('button').forEach(setTabIndex);
+            mapElement.querySelectorAll('div[role="button"]').forEach(setTabIndex);
+            mapElement.querySelectorAll('div[tabindex="0"]').forEach(setTabIndex);
+            google.maps.event.removeListener(listener)
+        });
+    }
+
 }

@@ -168,7 +168,8 @@ fetchRestaurantFromURL((error, restaurant) => {
   }
   fillBreadcrumb();
   GoogleMapsLoader.load(google => {
-    _map = new google.maps.Map(document.getElementById('map'), {
+    const mapElement = document.getElementById('map');
+    _map = new google.maps.Map(mapElement, {
       zoom: 16,
       center: restaurant.latlng,
       scrollwheel: false
