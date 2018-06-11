@@ -175,7 +175,6 @@ fetchRestaurantFromURL((error, restaurant) => {
       center: restaurant.latlng,
       scrollwheel: false
     });
-    Utility.removeFromTabOrder(_map, mapElement);
     DBHelper.mapMarkerForRestaurant(restaurant, _map);
   });
 });
