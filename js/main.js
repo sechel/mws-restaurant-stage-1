@@ -35,7 +35,6 @@ GoogleMapsLoader.load(google => {
     center: loc,
     scrollwheel: false
   });
-  Utility.removeFromTabOrder(_map, mapElement);
   updateRestaurants();
 });
 
@@ -187,6 +186,7 @@ const createRestaurantHTML = (restaurant) => {
   more.innerHTML = 'View Details';
   more.setAttribute('aria-label', 'view details for restaurant ' + restaurant.name);
   more.href = DBHelper.urlForRestaurant(restaurant);
+  more.tabIndex = 1;
   li.append(more)
 
   return li

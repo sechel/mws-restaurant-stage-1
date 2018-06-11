@@ -10,21 +10,21 @@
 <body>
   <header>
     <nav role="navigation">
-      <h1><a href="/" aria-current="page">Restaurant Reviews</a></h1>
+      <h1><a href="/" aria-current="page" tabindex="1">Restaurant Reviews</a></h1>
     </nav>
   </header>
 
   <main id="maincontent" role="main">
     <section id="map-container">
-      <div id="map" role="application"></div>
+      <div id="map" role="application" tabindex="2" name="Map"></div>
     </section>
-    <section>
+    <section id="restaurants-selection">
       <div class="filter-options">
         <h2>Filter Results</h2>
-        <select id="neighborhoods-select" name="neighborhoods" onchange="updateRestaurants()">
+        <select id="neighborhoods-select" tabindex="1" name="neighborhoods" onchange="updateRestaurants()">
           <option value="all">All Neighborhoods</option>
         </select>
-        <select id="cuisines-select" name="cuisines" onchange="updateRestaurants()">
+        <select id="cuisines-select" tabindex="1" name="cuisines" onchange="updateRestaurants()">
           <option value="all">All Cuisines</option>
         </select>
       </div>
@@ -33,7 +33,7 @@
   </main>
 
   <footer id="footer">
-    Copyright (c) 2017 <a href="/"><strong>Restaurant Reviews</strong></a> All Rights Reserved.
+    Copyright (c) 2017 <a href="/" tabindex="1"><strong>Restaurant Reviews</strong></a> All Rights Reserved.
   </footer>
 
 </body>
