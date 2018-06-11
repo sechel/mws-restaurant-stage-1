@@ -142,6 +142,7 @@ const fillBreadcrumb = () => {
   const breadcrumb = document.getElementById('breadcrumb');
   const li = document.createElement('li');
   li.innerHTML = _restaurant.name;
+  li.setAttribute('aria-current', 'page')
   breadcrumb.appendChild(li);
 }
 
@@ -174,6 +175,7 @@ fetchRestaurantFromURL((error, restaurant) => {
       center: restaurant.latlng,
       scrollwheel: false
     });
+    Utility.removeFromTabOrder(_map, mapElement);
     DBHelper.mapMarkerForRestaurant(restaurant, _map);
   });
 });
