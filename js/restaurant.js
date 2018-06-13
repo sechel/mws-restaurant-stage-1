@@ -141,9 +141,14 @@ const createReviewHTML = (review) => {
 const fillBreadcrumb = () => {
   const breadcrumb = document.getElementById('breadcrumb');
   const li = document.createElement('li');
-  li.innerHTML = _restaurant.name;
-  li.setAttribute('aria-current', 'page')
   breadcrumb.appendChild(li);
+
+  const a = document.createElement('a');
+  a.href = '?id=' + _restaurant.id;
+  a.innerText = _restaurant.name;
+  a.tabIndex = 1;
+  a.setAttribute('aria-current', 'page')
+  li.appendChild(a);
 }
 
 /**
