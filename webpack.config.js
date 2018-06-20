@@ -7,6 +7,7 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const RESPONSIVE_SIZES = [250, 320, 400, 500, 640, 800];
 const GDRIVE_API_KEY = 'AIzaSyA4PPJmgs2SFr05ux53ByeTl3fM0Zcp8z0';
 const DIST_DIR = __dirname + '/dist';
+const API_HOST = 'http://localhost:1337/';
 
 module.exports = {
     mode: 'development',
@@ -84,7 +85,8 @@ module.exports = {
         }),
         new DefinePlugin({
             WEBPACK_GDRIVE_API_KEY: JSON.stringify(GDRIVE_API_KEY),
-            WEBPACK_RESPONSIVE_SIZES: JSON.stringify(RESPONSIVE_SIZES)
+            WEBPACK_RESPONSIVE_SIZES: JSON.stringify(RESPONSIVE_SIZES),
+            WEBPACK_API_HOST: JSON.stringify(API_HOST)
         }),
         new HtmlWebpackPlugin({
             template: './html/index.html',
@@ -106,7 +108,7 @@ module.exports = {
             ],
             runtimeCaching: [
                 {
-                    urlPattern: new RegExp('^http://localhost:8000/data/'),
+                    urlPattern: new RegExp('^' + API_HOST),
                     handler: 'staleWhileRevalidate',
                     options: {
                         cacheName: 'data-cache'
