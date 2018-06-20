@@ -52,7 +52,7 @@ const fillRestaurantHTML = () => {
   const image = document.getElementById('restaurant-img');
   image.className = 'restaurant-img lazyload'
   const src = DBHelper.imageUrlForRestaurant(_restaurant);
-  // image.src = 'img-svg/bars.svg'; //Utility.generateLowResSrc(src);
+  image.src = Utility.generateLowResSrc(src);
   image.setAttribute('data-src', image.src);
   image.setAttribute('data-srcset', Utility.generateSrcSet(src));
   image.setAttribute('data-sizes', 'auto');

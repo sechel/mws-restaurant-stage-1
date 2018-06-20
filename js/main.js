@@ -1,7 +1,10 @@
 import { DBHelper } from './dbhelper';
 import { Utility } from './utility';
 import '../css/responsive.css';
-import 'lazysizes';
+import layzSizes from 'lazysizes';
+
+lazySizesConfig.expand = 10;
+lazySizes.init();
 
 function requireAll(requireContext) {
   return requireContext.keys().forEach(requireContext);
@@ -159,7 +162,7 @@ const createRestaurantHTML = (restaurant) => {
   const image = document.createElement('img');
   image.className = 'restaurant-img lazyload';
   const src = DBHelper.imageUrlForRestaurant(restaurant);
-  // image.src = 'img-svg/bars.svg'; //Utility.generateLowResSrc(src);
+  image.src = Utility.generateLowResSrc(src);
   image.setAttribute('data-src', image.src);
   image.setAttribute('data-srcset', Utility.generateSrcSet(src));
   image.setAttribute('data-sizes', 'auto');
