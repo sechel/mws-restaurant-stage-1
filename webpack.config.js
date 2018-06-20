@@ -3,6 +3,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin')
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const { GenerateSW } = require('workbox-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const CompressionPlugin = require('compression-webpack-plugin')
 
 const RESPONSIVE_SIZES = [250, 320, 400, 500, 640, 800];
 const GDRIVE_API_KEY = 'AIzaSyA4PPJmgs2SFr05ux53ByeTl3fM0Zcp8z0';
@@ -44,7 +45,8 @@ module.exports = {
                         options: {
                             name: 'img/[name]-[width].[ext]',
                             sizes: RESPONSIVE_SIZES,
-                            adapter: require('responsive-loader/sharp')
+                            adapter: require('responsive-loader/sharp'),
+                            quality: 65
                         }
                     }
                 ]
@@ -91,14 +93,17 @@ module.exports = {
         new HtmlWebpackPlugin({
             template: './html/index.html',
             filename: 'index.html',
-            excludeChunks: ['restaurant']
+            excludeChunks: ['restaurant'],
+            WEBPACK_GDRIVE_API_KEY: GDRIVE_API_KEY
         }),
         new HtmlWebpackPlugin({
             template: './html/restaurant.html',
             filename: 'restaurant.html',
-            excludeChunks: ['index']
+            excludeChunks: ['index'],
+            WEBPACK_GDRIVE_API_KEY: GDRIVE_API_KEY
         }),
-        new CopyWebpackPlugin(['data/**/*', 'img/**/*']),
+        new CopyWebpackPlugin(['data/**/*', 'img/**/*', 'img-svg/**/*']),
+        new CompressionPlugin(),
         new GenerateSW({
             skipWaiting: true,
             ignoreUrlParametersMatching: [/./],

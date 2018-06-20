@@ -1,9 +1,8 @@
 import { DBHelper } from './dbhelper';
 import { Utility } from './utility';
-import GoogleMapsLoader from 'google-maps';
-import Styles from '../css/responsive.css';
-
+import '../css/responsive.css';
 import 'lazysizes';
+
 function requireAll(requireContext) {
   return requireContext.keys().forEach(requireContext);
 }
@@ -22,9 +21,7 @@ if ('serviceWorker' in navigator) {
   });
 }
 
-GoogleMapsLoader.KEY = WEBPACK_GDRIVE_API_KEY;
-GoogleMapsLoader.LIBRARIES = ['places'];
-GoogleMapsLoader.load(google => {
+window.initMap = function() {
   let loc = {
     lat: 40.722216,
     lng: -73.987501
@@ -35,13 +32,14 @@ GoogleMapsLoader.load(google => {
     center: loc,
     scrollwheel: false
   });
-  updateRestaurants();
-});
+  addMarkersToMap();
+};
 
 /**
  * Fetch neighborhoods and cuisines as soon as the page is loaded.
  */
 document.addEventListener('DOMContentLoaded', event => {
+  updateRestaurants();
   fetchNeighborhoods();
   fetchCuisines();
 });
@@ -161,7 +159,7 @@ const createRestaurantHTML = (restaurant) => {
   const image = document.createElement('img');
   image.className = 'restaurant-img lazyload';
   const src = DBHelper.imageUrlForRestaurant(restaurant);
-  image.src = Utility.generateLowResSrc(src);
+  // image.src = 'img-svg/bars.svg'; //Utility.generateLowResSrc(src);
   image.setAttribute('data-src', image.src);
   image.setAttribute('data-srcset', Utility.generateSrcSet(src));
   image.setAttribute('data-sizes', 'auto');
@@ -196,6 +194,7 @@ const createRestaurantHTML = (restaurant) => {
  * Add markers for current restaurants to the map.
  */
 const addMarkersToMap = () => {
+  if (!('google' in window)) { return; }
   _restaurants.forEach(restaurant => {
     // Add marker to the map
     const marker = DBHelper.mapMarkerForRestaurant(restaurant, _map);

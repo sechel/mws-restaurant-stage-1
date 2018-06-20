@@ -1,7 +1,6 @@
 import { DBHelper } from './dbhelper';
 import { Utility } from './utility';
-import GoogleMapsLoader from 'google-maps';
-import Styles from '../css/responsive.css';
+import '../css/responsive.css';
 import 'lazysizes';
 
 let _restaurant;
@@ -14,8 +13,6 @@ if ('serviceWorker' in navigator) {
   });
 }
 
-GoogleMapsLoader.KEY = WEBPACK_GDRIVE_API_KEY;
-GoogleMapsLoader.LIBRARIES = ['places'];
 
 /**
  * Get current restaurant from page URL.
@@ -55,7 +52,7 @@ const fillRestaurantHTML = () => {
   const image = document.getElementById('restaurant-img');
   image.className = 'restaurant-img lazyload'
   const src = DBHelper.imageUrlForRestaurant(_restaurant);
-  image.src = Utility.generateLowResSrc(src);
+  // image.src = 'img-svg/bars.svg'; //Utility.generateLowResSrc(src);
   image.setAttribute('data-src', image.src);
   image.setAttribute('data-srcset', Utility.generateSrcSet(src));
   image.setAttribute('data-sizes', 'auto');
@@ -173,7 +170,10 @@ fetchRestaurantFromURL((error, restaurant) => {
     return;
   }
   fillBreadcrumb();
-  GoogleMapsLoader.load(google => {
+});
+
+window.initMap = function() {
+  fetchRestaurantFromURL((error, restaurant) => {
     const mapElement = document.getElementById('map');
     _map = new google.maps.Map(mapElement, {
       zoom: 16,
@@ -182,4 +182,4 @@ fetchRestaurantFromURL((error, restaurant) => {
     });
     DBHelper.mapMarkerForRestaurant(restaurant, _map);
   });
-});
+}
