@@ -3,7 +3,8 @@ const HtmlWebpackPlugin = require('html-webpack-plugin')
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const { GenerateSW } = require('workbox-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const CompressionPlugin = require('compression-webpack-plugin')
+const CompressionPlugin = require('compression-webpack-plugin');
+const WebpackPwaManifest = require('webpack-pwa-manifest');
 
 const RESPONSIVE_SIZES = [250, 320, 400, 500, 640, 800];
 const GDRIVE_API_KEY = 'AIzaSyA4PPJmgs2SFr05ux53ByeTl3fM0Zcp8z0';
@@ -30,7 +31,7 @@ module.exports = {
                     options: { presets: ['env'] }
                 }
             },
-            { 
+            {
                 test: /\.css$/,
                 use: [
                     MiniCssExtractPlugin.loader,
@@ -38,7 +39,7 @@ module.exports = {
                 ]
             },
             {
-                test: /\.jpg$/,
+                test: /\.(jpg|png)$/,
                 use: [
                     {
                         loader: 'responsive-loader',
@@ -125,14 +126,27 @@ module.exports = {
                     options: {
                         cacheName: 'image-cache'
                     }
-                },         
+                },
                 {
                     urlPattern: new RegExp('^https://maps.googleapis.com/|^https://maps.gstatic.com/'),
                     handler: 'networkFirst',
                     options: {
                         cacheName: 'google-maps-cache'
                     }
-                }                       
+                }
+            ]
+        }),
+        new WebpackPwaManifest({
+            name: 'Restaurant Reviews Progressive Web App',
+            short_name: 'MWSApp',
+            description: 'The Restaurant Reviews Progressive Web App',
+            background_color: '#ffffff',
+            theme_color: '#ffffff',
+            icons: [
+                {
+                    src: __dirname + '/img/icon-large.png',
+                    sizes: [96, 128, 192, 256, 384, 512]
+                }
             ]
         })
     ]

@@ -167,7 +167,7 @@ const createRestaurantHTML = (restaurant) => {
   image.setAttribute('data-srcset', Utility.generateSrcSet(src));
   image.setAttribute('data-sizes', 'auto');
   image.alt = 'Image of restaurant ' + restaurant.name;
-  image.setAttribute('aria-details', details_id);
+  // image.setAttribute('aria-details', details_id);
   li.append(image);
 
   const name = document.createElement('h2');
