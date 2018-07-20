@@ -14,22 +14,25 @@ const API_HOST = 'http://localhost:1337/';
 module.exports = {
     mode: 'development',
     entry: {
-        index: './js/main.js',
-        restaurant: './js/restaurant.js'
+        index: './src/main.ts',
+        restaurant: './src/restaurant.ts'
     },
     output: {
         path: DIST_DIR,
         filename: 'js/[name].[hash].js'
     },
+    resolve: {
+        modules: [
+            __dirname + '/node_modules'
+        ],
+        extensions: ['\.ts', '\.js']
+    },
     module: {
         rules: [
             {
-                test: /\.js$/,
+                test: /\.ts$/,
                 exclude: /node_modules/,
-                use: {
-                    loader: 'babel-loader',
-                    options: { presets: ['env'] }
-                }
+                use: 'ts-loader'
             },
             {
                 test: /\.css$/,

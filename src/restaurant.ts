@@ -17,15 +17,14 @@ if ('serviceWorker' in navigator) {
 /**
  * Get current restaurant from page URL.
  */
-const fetchRestaurantFromURL = (callback) => {
+function fetchRestaurantFromURL(callback) {
   if (_restaurant) { // restaurant already fetched!
     callback(null, _restaurant)
     return;
   }
   const id = getParameterByName('id');
   if (!id) { // no id found in URL
-    error = 'No restaurant id in URL'
-    callback(error, null);
+    callback('No restaurant id in URL', null);
   } else {
     DBHelper.fetchRestaurantById(id, (error, restaurant) => {
       _restaurant = restaurant;
@@ -49,12 +48,13 @@ const fillRestaurantHTML = () => {
   const address = document.getElementById('restaurant-address');
   address.innerHTML = _restaurant.address;
 
-  const image = document.getElementById('restaurant-img');
+  const image = document.getElementById('restaurant-img') as HTMLImageElement;
   image.className = 'restaurant-img lazyload'
   const src = DBHelper.imageUrlForRestaurant(_restaurant);
+  const srcset = Utility.generateSrcSet(src).join(',');
   image.src = Utility.generateLowResSrc(src);
   image.setAttribute('data-src', image.src);
-  image.setAttribute('data-srcset', Utility.generateSrcSet(src));
+  image.setAttribute('data-srcset', srcset);
   image.setAttribute('data-sizes', 'auto');
   image.alt = 'Image of restaurant ' + _restaurant.name;
 
@@ -135,7 +135,7 @@ const createReviewHTML = (review) => {
 /**
  * Add restaurant name to the breadcrumb navigation menu
  */
-const fillBreadcrumb = () => {
+function fillBreadcrumb() {
   const breadcrumb = document.getElementById('breadcrumb');
   const li = document.createElement('li');
   breadcrumb.appendChild(li);
@@ -151,7 +151,7 @@ const fillBreadcrumb = () => {
 /**
  * Get a parameter by name from page URL.
  */
-const getParameterByName = (name, url) => {
+function getParameterByName(name: string, url?: string) {
   if (!url) { url = window.location.href; }
   name = name.replace(/[\[\]]/g, '\\$&');
   const regex = new RegExp(`[?&]${name}(=([^&#]*)|&|#|$)`);
@@ -172,7 +172,7 @@ fetchRestaurantFromURL((error, restaurant) => {
   fillBreadcrumb();
 });
 
-window.initMap = function() {
+window['initMap'] = function() {
   fetchRestaurantFromURL((error, restaurant) => {
     const mapElement = document.getElementById('map');
     _map = new google.maps.Map(mapElement, {

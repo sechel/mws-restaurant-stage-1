@@ -19,6 +19,7 @@
   "homepage": "https://github.com/udacity/mws-restaurant-stage-1#README.md",
   "dependencies": {},
   "devDependencies": {
+    "@types/google-maps": "^3.2.0",
     "babel-core": "^6.26.3",
     "babel-loader": "^7.1.4",
     "babel-preset-env": "^1.7.0",
@@ -35,6 +36,8 @@
     "responsive-loader": "^1.1.0",
     "sharp": "^0.20.3",
     "style-loader": "^0.21.0",
+    "ts-loader": "^4.4.2",
+    "typescript": "^2.9.2",
     "webpack": "^4.8.3",
     "webpack-cli": "^2.1.4",
     "webpack-dev-server": "^3.1.4",

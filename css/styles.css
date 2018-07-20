@@ -229,6 +229,7 @@ nav h1 a {
 #restaurant-content {
   display: flex;
   flex-direction: column;
+  flex-grow: 1;
 }
 #reviews-list {
   margin: 0;

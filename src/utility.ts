@@ -2,7 +2,7 @@ const RESPONSIVE_SIZES = WEBPACK_RESPONSIVE_SIZES;
 
 export class Utility {
 
-    static generateSrcSet(imageName) {
+    static generateSrcSet(imageName: string): string[] {
         const regExp = /(.*)\.([a-z]*)/
         const match = imageName.match(regExp);
         const name = match[1];
@@ -10,7 +10,7 @@ export class Utility {
         return RESPONSIVE_SIZES.map(size => `${name}-${size}.${ext} ${size}w`);
     }
 
-    static generateLowResSrc(imageName) {
+    static generateLowResSrc(imageName: string): string {
         const regExp = /(.*)\.([a-z]*)/
         const match = imageName.match(regExp);
         const name = match[1];
@@ -19,7 +19,7 @@ export class Utility {
         return `${name}-${lowResSize}.${ext}`;
     }
 
-    static getSizes() {
+    static getSizes(): string[] {
         return RESPONSIVE_SIZES.map(size => `(max-width: ${size}px) ${size}px`)
     }
 

@@ -1,4 +1,4 @@
-import GoogleMapsLoader from 'google-maps';
+import 'google-maps';
 
 /**
  * Common database helper functions.
@@ -30,6 +30,10 @@ export class DBHelper {
     .then(r => r.json())
     .then(restaurants => callback(null, restaurants))
     .catch(error => callback(error, null));
+  }
+
+  static fetchReviewsByRestaurantId(id, callback) {
+    
   }
 
   /**
@@ -146,7 +150,6 @@ export class DBHelper {
     const marker = new google.maps.Marker({
       position: restaurant.latlng,
       title: restaurant.name,
-      url: DBHelper.urlForRestaurant(restaurant),
       map: map,
       animation: google.maps.Animation.DROP}
     );
