@@ -1,4 +1,4 @@
-import { DBHelper } from './dbhelper';
+import { DB, Restaurant } from './db';
 import { Utility } from './utility';
 import '../css/responsive.css';
 import lazySizes = require('lazysizes');
@@ -11,11 +11,11 @@ function requireAll(requireContext) {
 }
 requireAll(require.context('../img'));
 
-let _restaurants = [];
-let _neighborhoods = [];
-let _cuisines = [];
-let _map;
-let _markers = [];
+let _restaurants: Restaurant[] = [];
+let _neighborhoods: string[] = [];
+let _cuisines: string[] = [];
+let _map: google.maps.Map;
+let _markers: google.maps.Marker[] = [];
 
 if ('serviceWorker' in navigator) {
   // Use the window load event to keep the page load performant
@@ -47,15 +47,9 @@ document.addEventListener('DOMContentLoaded', event => {
 /**
  * Fetch all neighborhoods and set their HTML.
  */
-function fetchNeighborhoods() {
-  DBHelper.fetchNeighborhoods((error, neighborhoods) => {
-    if (error) { // Got an error
-      console.error(error);
-    } else {
-      _neighborhoods = neighborhoods;
-      fillNeighborhoodsHTML();
-    }
-  });
+async function fetchNeighborhoods() {
+  _neighborhoods = await DB.fetchNeighborhoods();
+  fillNeighborhoodsHTML();
 }
 
 /**
@@ -74,15 +68,9 @@ function fillNeighborhoodsHTML() {
 /**
  * Fetch all cuisines and set their HTML.
  */
-function fetchCuisines() {
-  DBHelper.fetchCuisines((error, cuisines) => {
-    if (error) { // Got an error!
-      console.error(error);
-    } else {
-      _cuisines = cuisines;
-      fillCuisinesHTML();
-    }
-  });
+async function fetchCuisines() {
+  _cuisines = await DB.fetchCuisines();
+  fillCuisinesHTML();
 }
 
 /**
@@ -90,7 +78,6 @@ function fetchCuisines() {
  */
 function fillCuisinesHTML() {
   const select = document.getElementById('cuisines-select');
-
   _cuisines.forEach(cuisine => {
     const option = document.createElement('option');
     option.innerHTML = cuisine;
@@ -102,7 +89,7 @@ function fillCuisinesHTML() {
 /**
  * Update page and map for current restaurants.
  */
-function updateRestaurants() {
+async function updateRestaurants() {
   const cSelect = document.getElementById('cuisines-select') as HTMLSelectElement;
   const nSelect = document.getElementById('neighborhoods-select') as HTMLSelectElement;
 
@@ -112,14 +99,9 @@ function updateRestaurants() {
   const cuisine = cSelect[cIndex].value;
   const neighborhood = nSelect[nIndex].value;
 
-  DBHelper.fetchRestaurantByCuisineAndNeighborhood(cuisine, neighborhood, (error, restaurants) => {
-    if (error) { // Got an error!
-      console.error(error);
-    } else {
-      resetRestaurants(restaurants);
-      fillRestaurantsHTML();
-    }
-  })
+  const restaurants = await DB.fetchRestaurantsByCuisineAndNeighborhood(cuisine, neighborhood);
+  resetRestaurants(restaurants);
+  fillRestaurantsHTML();
 }
 
 /**
@@ -151,20 +133,20 @@ function fillRestaurantsHTML() {
 /**
  * Create restaurant HTML.
  */
-function createRestaurantHTML(restaurant) {
+function createRestaurantHTML(restaurant: Restaurant) {
   const details_id = 'restaurant_details_' + restaurant.id;
   const li = document.createElement('li');
+  Utility.createStar(restaurant, li);
 
   const image = document.createElement('img');
   image.className = 'restaurant-img lazyload';
-  const src = DBHelper.imageUrlForRestaurant(restaurant);
+  const src = DB.imageUrlForRestaurant(restaurant);
   const srcset = Utility.generateSrcSet(src).join(',');
   image.src = Utility.generateLowResSrc(src);
   image.setAttribute('data-src', image.src);
   image.setAttribute('data-srcset', srcset);
   image.setAttribute('data-sizes', 'auto');
   image.alt = 'Image of restaurant ' + restaurant.name;
-  // image.setAttribute('aria-details', details_id);
   li.appendChild(image);
 
   const name = document.createElement('h2');
@@ -183,7 +165,7 @@ function createRestaurantHTML(restaurant) {
   more.id = details_id;
   more.innerHTML = 'View Details';
   more.setAttribute('aria-label', 'view details for restaurant ' + restaurant.name);
-  more.href = DBHelper.urlForRestaurant(restaurant);
+  more.href = DB.urlForRestaurant(restaurant);
   more.tabIndex = 1;
   li.appendChild(more)
 
@@ -197,9 +179,9 @@ function addMarkersToMap() {
   if (!('google' in window)) { return; }
   _restaurants.forEach(restaurant => {
     // Add marker to the map
-    const marker = DBHelper.mapMarkerForRestaurant(restaurant, _map);
+    const marker = DB.mapMarkerForRestaurant(restaurant, _map);
     google.maps.event.addListener(marker, 'click', () => {
-      window.location.href = DBHelper.urlForRestaurant(restaurant);
+      window.location.href = DB.urlForRestaurant(restaurant);
     });
     _markers.push(marker);
   });

@@ -1,6 +1,12 @@
 @charset "utf-8";
 /* CSS Document */
 
+@import url(http://weloveiconfonts.com/api/?family=fontawesome);
+/* fontawesome */
+[class*="fontawesome-"]:before {
+  font-family: 'FontAwesome', sans-serif;
+}
+
 body,td,th,p{
 	font-family: Arial, Helvetica, sans-serif;
   font-size: 10pt;
@@ -181,6 +187,21 @@ nav h1 a {
   text-align: center;
   text-decoration: none;
   text-transform: uppercase;
+}
+
+.star {
+  position: absolute;
+  font-size: 2em;
+  color: yellow;
+  text-shadow: 0px 0px 8px black;
+  border: none;
+  outline: none;
+  background: none;
+  transition: 0.2s;
+}
+
+.star:hover {
+  text-shadow: 0px 0px 8px yellow;
 }
 
 /* ====================== Restaurant Details ====================== */

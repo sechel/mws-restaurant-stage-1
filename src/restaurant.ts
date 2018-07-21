@@ -1,10 +1,12 @@
-import { DBHelper } from './dbhelper';
+import { DB, Restaurant, Review } from './db';
 import { Utility } from './utility';
+import { Lock } from 'semaphore-async-await';
 import '../css/responsive.css';
 import 'lazysizes';
 
-let _restaurant;
-let _map;
+let _restaurant: Restaurant;
+let _map: google.maps.Map;
+const fetchLock = new Lock
 
 if ('serviceWorker' in navigator) {
   // Use the window load event to keep the page load performant
@@ -17,40 +19,37 @@ if ('serviceWorker' in navigator) {
 /**
  * Get current restaurant from page URL.
  */
-function fetchRestaurantFromURL(callback) {
-  if (_restaurant) { // restaurant already fetched!
-    callback(null, _restaurant)
-    return;
-  }
-  const id = getParameterByName('id');
-  if (!id) { // no id found in URL
-    callback('No restaurant id in URL', null);
-  } else {
-    DBHelper.fetchRestaurantById(id, (error, restaurant) => {
-      _restaurant = restaurant;
-      if (!restaurant) {
-        console.error(error);
-        return;
-      }
-      fillRestaurantHTML();
-      callback(null, restaurant)
-    });
+async function fetchRestaurantFromURL(): Promise<Restaurant> {
+  await fetchLock.acquire();
+  try {
+    if (_restaurant) { return _restaurant; }
+    const id = getParameterByName('id');
+    if (!id) { throw new Error('No restaurant id in URL'); }
+    _restaurant = await DB.fetchRestaurantById(id);
+    if (!_restaurant) { throw new Error(`Restaurant with id ${id} not found`); }
+    fillRestaurantHTML();
+    return _restaurant;
+  } finally {
+    fetchLock.release();
   }
 }
 
 /**
  * Create restaurant HTML and add it to the webpage
  */
-const fillRestaurantHTML = () => {
+function fillRestaurantHTML() {
   const name = document.getElementById('restaurant-name');
   name.innerHTML = _restaurant.name;
+
+  const star = document.getElementById('star');
+  Utility.createStar(_restaurant, star);
 
   const address = document.getElementById('restaurant-address');
   address.innerHTML = _restaurant.address;
 
   const image = document.getElementById('restaurant-img') as HTMLImageElement;
   image.className = 'restaurant-img lazyload'
-  const src = DBHelper.imageUrlForRestaurant(_restaurant);
+  const src = DB.imageUrlForRestaurant(_restaurant);
   const srcset = Utility.generateSrcSet(src).join(',');
   image.src = Utility.generateLowResSrc(src);
   image.setAttribute('data-src', image.src);
@@ -70,7 +69,7 @@ const fillRestaurantHTML = () => {
 /**
  * Create restaurant operating hours HTML table and add it to the webpage.
  */
-const fillRestaurantHoursHTML = () => {
+function fillRestaurantHoursHTML() {
   if (!_restaurant.operating_hours) { return; }
   const operatingHours = _restaurant.operating_hours
   const hours = document.getElementById('restaurant-hours');
@@ -92,8 +91,8 @@ const fillRestaurantHoursHTML = () => {
 /**
  * Create all reviews HTML and add them to the webpage.
  */
-const fillReviewsHTML = () => {
-  const reviews = _restaurant.reviews
+async function fillReviewsHTML() {
+  const reviews = await DB.fetchReviewsByRestaurantId(_restaurant.id);
   const container = document.getElementById('reviews-container');
   if (!reviews) {
     const noReviews = document.createElement('p');
@@ -111,14 +110,14 @@ const fillReviewsHTML = () => {
 /**
  * Create review HTML and add it to the webpage.
  */
-const createReviewHTML = (review) => {
+function createReviewHTML(review: Review) {
   const li = document.createElement('li');
   const name = document.createElement('p');
   name.innerHTML = review.name;
   li.appendChild(name);
 
   const date = document.createElement('p');
-  date.innerHTML = review.date;
+  date.innerHTML = new Date(review.createdAt).toISOString();
   li.appendChild(date);
 
   const rating = document.createElement('p');
@@ -164,22 +163,15 @@ function getParameterByName(name: string, url?: string) {
 /**
  * Initialize Google map, called from HTML.
  */
-fetchRestaurantFromURL((error, restaurant) => {
-  if (error) { // Got an error!
-    console.error(error);
-    return;
-  }
-  fillBreadcrumb();
-});
+fetchRestaurantFromURL().then(fillBreadcrumb);
 
-window['initMap'] = function() {
-  fetchRestaurantFromURL((error, restaurant) => {
-    const mapElement = document.getElementById('map');
-    _map = new google.maps.Map(mapElement, {
-      zoom: 16,
-      center: restaurant.latlng,
-      scrollwheel: false
-    });
-    DBHelper.mapMarkerForRestaurant(restaurant, _map);
+window['initMap'] = async function() {
+  const restaurant = await fetchRestaurantFromURL();
+  const mapElement = document.getElementById('map');
+  _map = new google.maps.Map(mapElement, {
+    zoom: 16,
+    center: restaurant.latlng,
+    scrollwheel: false
   });
-}
+  DB.mapMarkerForRestaurant(restaurant, _map);
+};

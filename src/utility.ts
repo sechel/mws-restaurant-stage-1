@@ -1,8 +1,9 @@
+import { Restaurant, DB } from './db';
 const RESPONSIVE_SIZES = WEBPACK_RESPONSIVE_SIZES;
 
 export class Utility {
 
-    static generateSrcSet(imageName: string): string[] {
+    public static generateSrcSet(imageName: string): string[] {
         const regExp = /(.*)\.([a-z]*)/
         const match = imageName.match(regExp);
         const name = match[1];
@@ -10,7 +11,7 @@ export class Utility {
         return RESPONSIVE_SIZES.map(size => `${name}-${size}.${ext} ${size}w`);
     }
 
-    static generateLowResSrc(imageName: string): string {
+    public static generateLowResSrc(imageName: string): string {
         const regExp = /(.*)\.([a-z]*)/
         const match = imageName.match(regExp);
         const name = match[1];
@@ -19,8 +20,23 @@ export class Utility {
         return `${name}-${lowResSize}.${ext}`;
     }
 
-    static getSizes(): string[] {
+    public static getSizes(): string[] {
         return RESPONSIVE_SIZES.map(size => `(max-width: ${size}px) ${size}px`)
+    }
+
+    public static createStar(restaurant: Restaurant, root: HTMLElement) {
+        const star = document.createElement('button');
+        star.setAttribute('aria-label', 'set favorite');
+        star.classList.add('star');
+        star.classList.add((restaurant.is_favorite === 'true') ? 'fontawesome-star' : 'fontawesome-star-empty');
+        star.addEventListener('click', async () => {
+            restaurant.is_favorite = (restaurant.is_favorite === 'true') ? 'false' : 'true';
+            star.classList.remove('fontawesome-star');
+            star.classList.remove('fontawesome-star-empty');
+            star.classList.add((restaurant.is_favorite === 'true') ? 'fontawesome-star' : 'fontawesome-star-empty');
+            await DB.setFavorite(restaurant.id, restaurant.is_favorite);
+        });
+        root.appendChild(star);
     }
 
 }
