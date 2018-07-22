@@ -1,4 +1,5 @@
-import { Restaurant, Review } from './db';
+import { Review } from './db';
+import Dexie from 'dexie';
 import 'google-maps';
 
 export interface OpeningHours {
@@ -33,14 +34,20 @@ export interface Restaurant {
 }
 
 export interface Review {
-  id: number,
-  restaurant_id: number,
-  name: string,
-  createdAt: number,
-  updatedAt: number,
-  rating: number,
-  comments: string
+  id?: number;
+  restaurant_id: number;
+  name: string;
+  createdAt?: string | number;
+  updatedAt?: string | number;
+  rating: number;
+  comments: string;
 }
+
+const reviewBuffer = new Dexie('review-buffer');
+reviewBuffer.version(1).stores({ review: '++id' });
+
+setInterval(() => DB.submitPendingReviews(), 1000 * 60);
+setTimeout(() => DB.submitPendingReviews());
 
 /**
  * Common database helper functions.
@@ -72,7 +79,36 @@ export class DB {
 
   public static async fetchReviewsByRestaurantId(id): Promise<Array<Review>> {
     const response = await fetch(DB.DATABASE_URL + `reviews/?restaurant_id=${id}`);
-    return response.json();
+    const reviewsOnline: Review[] = await response.json();
+    const reviewsBuffered: Review[] = await reviewBuffer.table('review').toArray();
+    return [...reviewsOnline, ...reviewsBuffered];
+  }
+
+  public static async postReviewForm(form_data: FormData): Promise<Review> {
+    const review: Review = {
+      name: form_data.get('name').toString(),
+      rating: +form_data.get('rating').toString(),
+      comments: form_data.get('comments').toString(),
+      createdAt: Date.now(),
+      updatedAt: Date.now(),
+      restaurant_id: +form_data.get('restaurant_id').toString()
+    }
+    await reviewBuffer.table('review').put(review);
+    this.submitPendingReviews();
+    return review;
+  }
+
+  public static async submitPendingReviews() {
+    const reviews: Review[] = await reviewBuffer.table('review').toArray();
+    for (const review of reviews) {
+      const data = new FormData();
+      data.append('name', review.name);
+      data.append('rating', String(review.rating));
+      data.append('comments', review.comments);
+      data.append('restaurant_id', String(review.restaurant_id));
+      await fetch(DB.DATABASE_URL + `reviews/`, { method: 'POST', body: data });
+      await reviewBuffer.table('review').delete(review.id);
+    }
   }
 
   public static async setFavorite(id: number, favorite: Favorite): Promise<Restaurant> {

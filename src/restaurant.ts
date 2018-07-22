@@ -8,13 +8,55 @@ let _restaurant: Restaurant;
 let _map: google.maps.Map;
 const fetchLock = new Lock
 
-if ('serviceWorker' in navigator) {
-  // Use the window load event to keep the page load performant
-  window.addEventListener('load', () => {
+
+// Use the window load event to keep the page load performant
+window.addEventListener('load', async () => {
+  if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('/service-worker.js');
-  });
+  }
+  // fill in restaurant id
+  const restaurant = await fetchRestaurantFromURL();
+  const review_id_input = document.getElementById('review-restaurant-id') as HTMLInputElement;
+  review_id_input.value = String(restaurant.id);
+  const reviewButton = document.getElementById('write-review-button');
+  reviewButton.addEventListener('click', toggleReviewForm);
+});
+
+function toggleReviewForm() {
+  const reviewForm = document.getElementById('review-form-container');
+  reviewForm.classList.toggle('unfolded');
 }
 
+
+async function setRating(rating: number) {
+  const stars = [
+    document.getElementById('rating-1'),
+    document.getElementById('rating-2'),
+    document.getElementById('rating-3'),
+    document.getElementById('rating-4'),
+    document.getElementById('rating-5')
+  ];
+  for (let index = 0; index < stars.length; index++) {
+    const star = stars[index];
+    star.classList.remove('fontawesome-star');
+    star.classList.remove('fontawesome-star-empty');
+    star.classList.add((index < rating) ? 'fontawesome-star' : 'fontawesome-star-empty');
+  }
+};
+window['setRating'] = setRating;
+
+async function postReview() {
+  const form = document.getElementById('review-form') as HTMLFormElement;
+  const formData = new FormData(form);
+  const review = await DB.postReviewForm(formData);
+  const ul = document.getElementById('reviews-list') as HTMLUListElement;
+  ul.insertBefore(createReviewHTML(review), ul.firstChild);
+  toggleReviewForm();
+}
+window['postReview'] = () => {
+  window.event.preventDefault();
+  postReview();
+};
 
 /**
  * Get current restaurant from page URL.
@@ -93,6 +135,7 @@ function fillRestaurantHoursHTML() {
  */
 async function fillReviewsHTML() {
   const reviews = await DB.fetchReviewsByRestaurantId(_restaurant.id);
+  reviews.reverse();
   const container = document.getElementById('reviews-container');
   if (!reviews) {
     const noReviews = document.createElement('p');
@@ -117,7 +160,8 @@ function createReviewHTML(review: Review) {
   li.appendChild(name);
 
   const date = document.createElement('p');
-  date.innerHTML = new Date(review.createdAt).toISOString();
+  const dateString = new Date(review.createdAt).toDateString();
+  date.innerHTML = dateString;
   li.appendChild(date);
 
   const rating = document.createElement('p');

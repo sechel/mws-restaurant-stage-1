@@ -118,7 +118,7 @@ module.exports = {
             runtimeCaching: [
                 {
                     urlPattern: new RegExp('^' + API_HOST),
-                    handler: 'staleWhileRevalidate',
+                    handler: 'networkFirst',
                     options: {
                         cacheName: 'data-cache'
                     }
@@ -135,6 +135,13 @@ module.exports = {
                     handler: 'networkFirst',
                     options: {
                         cacheName: 'google-maps-cache'
+                    }
+                },
+                {
+                    urlPattern: new RegExp('^http://weloveiconfonts.com/api/'),
+                    handler: 'cacheFirst',
+                    options: { 
+                        cacheName: 'font-cache'
                     }
                 }
             ]

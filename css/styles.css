@@ -266,3 +266,53 @@ nav h1 a {
 #reviews-list li p {
   margin: 0 0 10px;
 }
+
+#write-review-button {
+  float: right;
+  width: 150px;
+  height: 30px;
+  border-radius: 5px;
+}
+
+#review-form-container {
+  max-height: 0px;
+  transition: 0.5s;
+  overflow: hidden;
+}
+
+.unfolded {
+  max-height: 500px !important;
+}
+
+#review-form {
+  background-color: #fff;
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 10px;
+}
+
+#review-form input[type="text"], textarea {
+  width: 98%;
+  border-radius: 5px;
+  border-style: solid;
+  border-width: 1px;
+  border-color: lightgray;
+}
+
+#review-form textarea {
+  resize: none;
+}
+
+.star-rating {
+  font-size: 1em;
+  color: yellow;
+  text-shadow: 0px 0px 5px black;
+  border: none;
+  outline: none;
+  background: none;
+  transition: 0.2s;
+}
+
+.star-rating:hover {
+  text-shadow: 0px 0px 5px yellow;
+}
