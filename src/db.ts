@@ -46,8 +46,8 @@ export interface Review {
 const reviewBuffer = new Dexie('review-buffer');
 reviewBuffer.version(1).stores({ review: '++id' });
 
-setInterval(() => DB.submitPendingReviews(), 1000 * 60);
 setTimeout(() => DB.submitPendingReviews());
+window.addEventListener('online', () => DB.submitPendingReviews());
 
 /**
  * Common database helper functions.
