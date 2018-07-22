@@ -5,7 +5,7 @@
   "scripts": {
     "build": "webpack --mode=production",
     "start": "webpack-dev-server",
-    "start:dist": "yarn build; http-server dist -p8000 -a127.0.0.1 -o -g --cors"
+    "start:dist": "yarn build; http-server dist -p8000 -a0.0.0.0 -o -g --cors"
   },
   "repository": {
     "type": "git",
