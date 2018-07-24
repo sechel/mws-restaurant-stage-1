@@ -50,7 +50,6 @@ module.exports = {
                         options: {
                             name: 'img/[name]-[width].[ext]',
                             sizes: RESPONSIVE_SIZES,
-                            adapter: require('responsive-loader/sharp'),
                             quality: 65
                         }
                     }
