@@ -93,13 +93,11 @@ nav h1 a {
 
 /* Add a color to all links inside the list */
 #breadcrumb li a {
-    color: #0275d8;
     text-decoration: none;
 }
 
 /* Add a color on mouse-over */
 #breadcrumb li a:hover {
-    color: #01447e;
     text-decoration: underline;
 }
 /* ====================== Map ====================== */
@@ -214,7 +212,6 @@ nav h1 a {
   width: 100%;
 }
 #restaurant-name {
-  color: #f18200;
   font-family: Arial,sans-serif;
   font-size: 20pt;
   font-weight: 200;
