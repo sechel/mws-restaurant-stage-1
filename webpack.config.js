@@ -9,6 +9,7 @@ const WebpackPwaManifest = require('webpack-pwa-manifest');
 const RESPONSIVE_SIZES = [250, 320, 400, 500, 640, 800];
 const GDRIVE_API_KEY = 'AIzaSyA4PPJmgs2SFr05ux53ByeTl3fM0Zcp8z0';
 const DIST_DIR = __dirname + '/dist';
+const WEB_HOST = 'http://127.0.0.1:8000'
 const API_HOST = 'http://localhost:1337/';
 
 module.exports = {
@@ -125,25 +126,28 @@ module.exports = {
                     }
                 },
                 {
-                    urlPattern: new RegExp('http\:\/\/127\.0\.0\.1\:8000\/img\/'),
+                    urlPattern: /http:\/\/127\.0\.0\.1:8000\/img\//,
                     handler: 'cacheFirst',
                     options: {
                         cacheName: 'image-cache'
                     }
                 },
                 {
-                    urlPattern: new RegExp('.*\.googleapis\.com|.*\.gstatic\.com'),
-                    handler: 'networkFirst',
+                    urlPattern: /(https:\/\/(maps|fonts)\.googleapis\.com)|(https:\/\/maps\.gstatic\.com\/)/,
+                    handler: 'staleWhileRevalidate',
                     options: {
                         cacheName: 'google-maps-cache'
                     }
                 },
                 {
-                    urlPattern: new RegExp('.*\.fontawesome\.com'),
+                    urlPattern: /https:\/\/fonts\.gstatic\.com/,
                     handler: 'cacheFirst',
-                    options: { 
-                        cacheName: 'font-cache'
-                    }
+                    options: { cacheName: 'google-fonts-cache' }
+                },
+                {
+                    urlPattern: /https:\/\/use\.fontawesome\.com/,
+                    handler: 'cacheFirst',
+                    options: { cacheName: 'fontawesome-fonts-cache' }
                 }
             ]
         }),
@@ -151,6 +155,7 @@ module.exports = {
             name: 'Restaurant Reviews Progressive Web App',
             short_name: 'MWSApp',
             description: 'The Restaurant Reviews Progressive Web App',
+            start_url: WEB_HOST,
             background_color: '#ffffff',
             theme_color: '#ffffff',
             icons: [
