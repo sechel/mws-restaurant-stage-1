@@ -1,11 +1,9 @@
 @charset "utf-8";
 /* CSS Document */
 
-@import url(http://weloveiconfonts.com/api/?family=fontawesome);
-/* fontawesome */
-[class*="fontawesome-"]:before {
-  font-family: 'FontAwesome', sans-serif;
-}
+@import url(https://use.fontawesome.com/releases/v5.1.1/css/regular.css);
+@import url(https://use.fontawesome.com/releases/v5.1.1/css/solid.css);
+@import url(https://use.fontawesome.com/releases/v5.1.1/css/fontawesome.css);
 
 body,td,th,p{
 	font-family: Arial, Helvetica, sans-serif;
@@ -198,6 +196,7 @@ nav h1 a {
   outline: none;
   background: none;
   transition: 0.2s;
+  padding: 5px;
 }
 
 .star:hover {

@@ -28,12 +28,13 @@ export class Utility {
         const star = document.createElement('button');
         star.setAttribute('aria-label', 'set favorite');
         star.classList.add('star');
-        star.classList.add((restaurant.is_favorite === 'true') ? 'fontawesome-star' : 'fontawesome-star-empty');
+        star.classList.add('fa-star');
+        star.classList.add((restaurant.is_favorite === 'true') ? 'fas' : 'far');
         star.addEventListener('click', async () => {
             restaurant.is_favorite = (restaurant.is_favorite === 'true') ? 'false' : 'true';
-            star.classList.remove('fontawesome-star');
-            star.classList.remove('fontawesome-star-empty');
-            star.classList.add((restaurant.is_favorite === 'true') ? 'fontawesome-star' : 'fontawesome-star-empty');
+            star.classList.remove('fas');
+            star.classList.remove('far');
+            star.classList.add((restaurant.is_favorite === 'true') ? 'fas' : 'far');
             await DB.setFavorite(restaurant.id, restaurant.is_favorite);
         });
         root.appendChild(star);

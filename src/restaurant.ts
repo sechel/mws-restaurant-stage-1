@@ -38,9 +38,9 @@ async function setRating(rating: number) {
   ];
   for (let index = 0; index < stars.length; index++) {
     const star = stars[index];
-    star.classList.remove('fontawesome-star');
-    star.classList.remove('fontawesome-star-empty');
-    star.classList.add((index < rating) ? 'fontawesome-star' : 'fontawesome-star-empty');
+    star.classList.remove('far');
+    star.classList.remove('fas');
+    star.classList.add((index < rating) ? 'fas' : 'far');
   }
 };
 window['setRating'] = setRating;

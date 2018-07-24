@@ -113,32 +113,33 @@ module.exports = {
             ignoreUrlParametersMatching: [/./],
             exclude: [
                 new RegExp('^data\/'),
-                new RegExp('^img\/')
+                new RegExp('^img\/'),
+                new RegExp('\.gz$')
             ],
             runtimeCaching: [
                 {
-                    urlPattern: new RegExp('^' + API_HOST),
+                    urlPattern: new RegExp(API_HOST),
                     handler: 'networkFirst',
                     options: {
                         cacheName: 'data-cache'
                     }
                 },
                 {
-                    urlPattern: new RegExp('^http://127.0.0.1:8000/img/'),
+                    urlPattern: new RegExp('http\:\/\/127\.0\.0\.1\:8000\/img\/'),
                     handler: 'cacheFirst',
                     options: {
                         cacheName: 'image-cache'
                     }
                 },
                 {
-                    urlPattern: new RegExp('^https://maps.googleapis.com/|^https://maps.gstatic.com/'),
+                    urlPattern: new RegExp('.*\.googleapis\.com|.*\.gstatic\.com'),
                     handler: 'networkFirst',
                     options: {
                         cacheName: 'google-maps-cache'
                     }
                 },
                 {
-                    urlPattern: new RegExp('^http://weloveiconfonts.com/api/'),
+                    urlPattern: new RegExp('.*\.fontawesome\.com'),
                     handler: 'cacheFirst',
                     options: { 
                         cacheName: 'font-cache'
